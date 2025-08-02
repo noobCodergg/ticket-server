@@ -3,8 +3,9 @@ const cors = require("cors");
 const connectDB = require("./Config/db");
 const cookieParser = require("cookie-parser");
 const path = require('path')
-const authRoute = require('./routes/userRoute')
-const productRoute = require('./routes/productRoute')
+const authRoute = require('./routes/authRoute')
+const busRoute = require('./routes/busRoute')
+const ticketRoute = require('./routes/ticketRoute')
 
 require("dotenv").config();
 
@@ -23,7 +24,8 @@ app.use(
 );
 
 app.use('/api/auth',authRoute)
-app.use('/api/product',productRoute)
+app.use('/api/bus',busRoute)
+app.use('/api/ticket',ticketRoute)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = process.env.PORT || 8080;
