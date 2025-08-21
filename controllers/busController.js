@@ -13,7 +13,7 @@ exports.createBusSchedule = async (req, res) => {
       company,
     } = req.body;
 
-    console.log(coachNo,from,to,date,fare,seatCount,departureTime,company)
+    
 
     // Generate seat numbers like A1, A2... B1, B2... etc.
     const seats = [];
@@ -61,9 +61,8 @@ exports.createBusSchedule = async (req, res) => {
 exports.getBusById = async(req,res)=>{
   try{
     const {id} = req.params;
-    console.log(id)
     const bus = await busModel.findById(id)
-    console.log(bus)
+   
     res.status(200).json(bus)
   }catch(error){
     res.status(500).json("Thisi is error")
