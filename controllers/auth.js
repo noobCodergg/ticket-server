@@ -157,3 +157,53 @@ exports.logout = async (req, res) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+
+
+const API_KEY = "AIzaSyDTR52ewrPKvBgBDsQJ_C-ciXXAHJmcBBY";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+
+exports.chat = async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message) return res.status(400).json({ reply: "No message provided." });
+
+    const payload = {
+      contents: [
+        {
+          parts: [
+            {
+              text: message
+            }
+          ]
+        }
+      ]
+    };
+
+    const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Gemini API error:", errorText);
+      return res.status(response.status).json({ reply: `API Error: ${errorText}` });
+    }
+
+    const data = await response.json();
+    console.log("API Response:", JSON.stringify(data, null, 2));
+
+    // Gemini response path
+    const botReply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a reply.";
+     
+
+    res.status(200).json({ reply: botReply });
+
+  } catch (err) {
+    console.error("Server error:", err);
+    res.status(500).json({ reply: "Something went wrong!" });
+  }
+};
